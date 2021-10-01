@@ -5,8 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { AuthContext } from "../provider/AuthProvider";
 
 // Main
-import Home from "../screens/Home";
-import SecondScreen from "../screens/SecondScreen";
+import Home from "../screens/home/Home";
+import SecondScreen from "../screens/home/SecondScreen";
 
 // Auth screens
 import Login from "../screens/auth/Login";

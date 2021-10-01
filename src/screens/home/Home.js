@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../provider/AuthProvider";
+import { AuthContext } from "../../provider/AuthProvider";
 import { View, Linking } from "react-native";
 import * as firebase from "firebase";
 import {
@@ -13,7 +13,7 @@ import {
   themeColor,
 } from "react-native-rapi-ui";
 import { Ionicons } from "@expo/vector-icons";
-import useFetch from "../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 const API = "https://habitapp-backend.herokuapp.com/users/";
 
 export default function ({ navigation }) {
