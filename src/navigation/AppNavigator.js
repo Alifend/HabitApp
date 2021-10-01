@@ -10,6 +10,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Home from "../screens/tasks/Home";
 import Task from "../screens/tasks/Tasks";
 import SecondScreen from "../screens/tasks/SecondScreen";
+import Statistics from "../screens/statistics/Statistics";
+
 
 // Auth screens
 import Login from "../screens/auth/Login";
@@ -58,6 +60,7 @@ const Main = () => {
         tabBarIcon: ({ color, size }) => (<MaterialCommunityIcons name="home" color={color} size={size} />) }} name="Task" component={Task} />
       <Tab.Screen name="SecondScreen" component={SecondScreen} />
     </Tab.Navigator>
+
   );
 };
 
