@@ -1,6 +1,6 @@
 import { AuthContext } from "../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -19,9 +19,19 @@ import * as firebase from "firebase";
 
 export default function Task() {
   const data = useContext(AuthContext);
-  const [info, loading] = useFetch(API + data.id, "", "GET");
+  const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
+
+  useEffect(() => {
+    if (!loading) {
+      info.forEach(element => {
+        setTaskItems((current) => [...current , element.titulo]);
+      });
+    }
+      return () => {
+    };
+  }, [info]);
 
   const handelAddTask = () => {
     Keyboard.dismiss();
@@ -48,9 +58,7 @@ export default function Task() {
         }}
       />
       <View style={styles.tasksWrapper}>
-        {!loading && <Text> {info.username} </Text>}
-        <Text style={styles.sectionTitle}>Today's tasks </Text>
-
+        <Text style={styles.sectionTitle}> Today's tasks {data.id} </Text>
         <View style={styles.items}>
           {taskItems.map((item, index) => {
             return (
