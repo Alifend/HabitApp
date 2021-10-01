@@ -61,6 +61,7 @@ const Main = () => {
       <Tab.Screen name="SecondScreen" component={SecondScreen} />
       <Tab.Screen name="Statistics" component={Statistics} />
     </Tab.Navigator>
+
   );
 };
 
