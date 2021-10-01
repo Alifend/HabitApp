@@ -1,5 +1,6 @@
+import { AuthContext } from "../../provider/AuthProvider";
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { Keyboard, 
          KeyboardAvoidingView, 
          Platform, StyleSheet, 
@@ -10,11 +11,15 @@ import { Keyboard,
 } from 'react-native';
 import {
     Button
-  } from "react-native-rapi-ui";
+} from "react-native-rapi-ui";
+import useFetch from "../../hooks/useFetch";
+const API = "https://habitapp-backend.herokuapp.com/users/";
 import Card_task from './card_task/Card_task';
 import * as firebase from "firebase";
 
 export default function Task() {
+  const data = useContext(AuthContext);
+  const [info, loading] = useFetch(API + data.id, "", "GET");
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
   
@@ -43,7 +48,7 @@ export default function Task() {
               }}
             />
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's tasks</Text>
+        <Text style={styles.sectionTitle}>Today's tasks {info.username} </Text>
 
         <View style={styles.items}>
           {
