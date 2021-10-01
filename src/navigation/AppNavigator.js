@@ -5,8 +5,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { AuthContext } from "../provider/AuthProvider";
 
 // Main
-import Home from "../screens/home/Home";
-import SecondScreen from "../screens/home/SecondScreen";
+import Home from "../screens/tasks/Home";
+import SecondScreen from "../screens/tasks/SecondScreen";
+import Statistics from "../screens/statistics/Statistics";
 
 // Auth screens
 import Login from "../screens/auth/Login";
@@ -56,6 +57,7 @@ const Main = () => {
     >
       <MainStack.Screen name="Home" component={Home} />
       <MainStack.Screen name="SecondScreen" component={SecondScreen} />
+      <MainStack.Screen name="Statistics" component={Statistics} />
     </MainStack.Navigator>
   );
 };
