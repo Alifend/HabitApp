@@ -9,7 +9,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { Button } from "react-native-rapi-ui";
 import useFetch from "../../hooks/useFetch";
@@ -20,17 +20,17 @@ import * as firebase from "firebase";
 export default function Task() {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
+  const [userinfo, loading_info] = useFetch(API + data.id, "", "GET");
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
 
   useEffect(() => {
     if (!loading) {
-      info.forEach(element => {
-        setTaskItems((current) => [...current , element.titulo]);
+      info.forEach((element) => {
+        setTaskItems((current) => [...current, element.titulo]);
       });
     }
-      return () => {
-    };
+    return () => {};
   }, [info]);
 
   const handelAddTask = () => {
@@ -54,11 +54,18 @@ export default function Task() {
           firebase.auth().signOut();
         }}
         style={{
-          marginTop: 10
+          marginTop: 10,
         }}
       />
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}> Today's tasks {data.id} </Text>
+        <Text style={styles.sectionTitle}> Today's tasks {data.id}</Text>
+        {!loading_info && (
+          <Text style={styles.sectionTitle}>
+            {" "}
+            {userinfo.username}
+            {" funcionó?????"}
+          </Text>
+        )}
         <View style={styles.items}>
           {taskItems.map((item, index) => {
             return (
@@ -94,18 +101,18 @@ export default function Task() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8EAED"
+    backgroundColor: "#E8EAED",
   },
   tasksWrapper: {
     paddingTop: 80,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   items: {
-    marginTop: 30
+    marginTop: 30,
   },
   writeTaskWrapper: {
     position: "absolute",
@@ -113,7 +120,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "center"
+    alignItems: "center",
   },
   input: {
     paddingVertical: 15,
@@ -122,7 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     borderColor: "#C0C0C0",
     borderWidth: 1,
-    width: 280
+    width: 280,
   },
   addWrapper: {
     width: 60,
@@ -132,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#C0C0C0",
-    borderWidth: 1
+    borderWidth: 1,
   },
-  addText: {}
+  addText: {},
 });
