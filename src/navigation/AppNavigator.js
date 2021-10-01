@@ -2,12 +2,16 @@ import React, { useContext } from "react";
 import firebase from "firebase/app";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthContext } from "../provider/AuthProvider";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Main
 import Home from "../screens/tasks/Home";
+import Task from "../screens/tasks/Tasks";
 import SecondScreen from "../screens/tasks/SecondScreen";
 import Statistics from "../screens/statistics/Statistics";
+
 
 // Auth screens
 import Login from "../screens/auth/Login";
@@ -24,19 +28,19 @@ const firebaseConfig = {
   projectId: "habitapp-4056f",
   storageBucket: "habitapp-4056f.appspot.com",
   messagingSenderId: "554460473425",
-  appId: "1:554460473425:web:6e5484186bed8a5d203070",
+  appId: "1:554460473425:web:6e5484186bed8a5d203070"
 };
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
 
 const AuthStack = createStackNavigator();
-
+const Tab = createBottomTabNavigator();
 const Auth = () => {
   return (
     <AuthStack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: false
       }}
     >
       <AuthStack.Screen name="Login" component={Login} />
@@ -50,15 +54,14 @@ const MainStack = createStackNavigator();
 
 const Main = () => {
   return (
-    <MainStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <MainStack.Screen name="Home" component={Home} />
-      <MainStack.Screen name="SecondScreen" component={SecondScreen} />
-      <MainStack.Screen name="Statistics" component={Statistics} />
-    </MainStack.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen options={{
+        tabBarLabel: "Task",
+        tabBarIcon: ({ color, size }) => (<MaterialCommunityIcons name="home" color={color} size={size} />) }} name="Task" component={Task} />
+      <Tab.Screen name="SecondScreen" component={SecondScreen} />
+      <Tab.Screen name="Statistics" component={Statistics} />
+    </Tab.Navigator>
+
   );
 };
 
