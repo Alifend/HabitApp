@@ -17,7 +17,7 @@ const API = "https://habitapp-backend.herokuapp.com/users/";
 import Card_task from "./card_task/Card_task";
 import * as firebase from "firebase";
 
-export default function Task() {
+export default function Task({ navigation }) {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id, "", "GET");
   const [task, setTask] = useState();
@@ -73,7 +73,9 @@ export default function Task() {
           onChangeText={(text) => setTask(text)}
         ></TextInput>
 
-        <TouchableOpacity onPress={() => handelAddTask()}>
+        <TouchableOpacity onPress={() => {
+                navigation.navigate("Add_task");
+              }}>
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>+</Text>
           </View>
