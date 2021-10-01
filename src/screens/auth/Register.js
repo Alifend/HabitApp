@@ -17,26 +17,39 @@ import {
   useTheme,
   themeColor,
 } from "react-native-rapi-ui";
+import userServices from "../../services/userServices";
 
 export default function ({ navigation }) {
   const { isDarkmode, setTheme } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    email: "",
+  });
   const [loading, setLoading] = useState(false);
 
+  const handleChange = (name, value) => {
+    setUserInfo((current) => ({ ...current, [name]: value }));
+  };
   async function register() {
     setLoading(true);
-    await firebase
+    const result = await firebase
       .auth()
-      .createUserWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(userInfo.email, userInfo.password)
+      .then((userCredentials) => {
+        const uid = userCredentials.user.uid;
+        userServices.register({ ...userInfo, password: "", uid });
+      })
       .catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
-        // ...
         setLoading(false);
         alert(errorMessage);
       });
+    console.log(result);
   }
 
   return (
@@ -86,25 +99,50 @@ export default function ({ navigation }) {
             <TextInput
               containerStyle={{ marginTop: 15 }}
               placeholder="Enter your email"
-              value={email}
+              value={userInfo.email}
               autoCapitalize="none"
               autoCompleteType="off"
               autoCorrect={false}
               keyboardType="email-address"
-              onChangeText={(text) => setEmail(text)}
+              onChangeText={(text) => handleChange("email", text)}
             />
 
             <Text style={{ marginTop: 15 }}>Password</Text>
             <TextInput
               containerStyle={{ marginTop: 15 }}
               placeholder="Enter your password"
-              value={password}
+              value={userInfo.password}
               autoCapitalize="none"
               autoCompleteType="off"
               autoCorrect={false}
               secureTextEntry={true}
-              onChangeText={(text) => setPassword(text)}
+              onChangeText={(text) => handleChange("password", text)}
             />
+            <Text style={{ marginTop: 15 }}>Username</Text>
+
+            <TextInput
+              containerStyle={{ marginTop: 15 }}
+              placeholder="Enter your username"
+              value={userInfo.username}
+              autoCapitalize="none"
+              autoCompleteType="off"
+              autoCorrect={false}
+              secureTextEntry={false}
+              onChangeText={(text) => handleChange("username", text)}
+            />
+            <Text style={{ marginTop: 15 }}>Gender</Text>
+
+            <TextInput
+              containerStyle={{ marginTop: 15 }}
+              placeholder="Enter your gender"
+              value={userInfo.gender}
+              autoCapitalize="none"
+              autoCompleteType="off"
+              autoCorrect={false}
+              secureTextEntry={false}
+              onChangeText={(text) => handleChange("gender", text)}
+            />
+
             <Button
               text={loading ? "Loading" : "Create an account"}
               onPress={() => {
