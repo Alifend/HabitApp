@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+//import * as firebase from "firebase";
 import firebase from "firebase/app";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -9,6 +10,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // Main
 import Home from "../screens/tasks/Home";
 import Task from "../screens/tasks/Tasks";
+import Add_task from "../screens/tasks/add_task/Add_task";
 import SecondScreen from "../screens/tasks/SecondScreen";
 import Statistics from "../screens/statistics/Statistics";
 
@@ -61,7 +63,7 @@ const Main = () => {
     <Tab.Navigator>
       <Tab.Screen
         options={{
-          tabBarLabel: "Task",
+          tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
@@ -69,12 +71,40 @@ const Main = () => {
         name="Task"
         component={Task}
       />
-      <Tab.Screen name="SecondScreen" component={SecondScreen} />
-      {!loading && (
-        <Tab.Screen name="Statistics">
-          {() => <Statistics tasks={info} />}
-        </Tab.Screen>
-      )}
+      <Tab.Screen
+        options={{
+          tabBarLabel: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+        }}
+        name="Profile"
+        component={SecondScreen}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: "Statistics",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="google-analytics" color={color} size={size}/>
+          ),
+        }}
+        name="Statistics"
+        component={Statistics}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: "Logout",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="logout" color={color} size={size}/>
+          ),
+          onPress: () => {
+            firebase.auth.signOut();
+          }
+        }}
+      
+        name="Login"
+        component={Login}
+      />
     </Tab.Navigator>
   );
 };
