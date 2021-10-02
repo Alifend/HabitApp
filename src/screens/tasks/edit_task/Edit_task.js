@@ -13,13 +13,11 @@ import {
 } from "react-native";
 import { ceil } from "react-native-reanimated";
 
-export default function Add_task(props) {
+export default function Edit_task(props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Crear Tarea:</Text>
+      <Text style={styles.title}>Edit Tarea:</Text>
       <View style={styles.taskForm}>
-        <Text style={styles.label}>Descripción</Text>
-        <TextInput style={styles.textInput}> </TextInput>
         <Text style={styles.label}>Descripción</Text>
         <TextInput style={styles.textInput}> </TextInput>
         <Text style={styles.label}>Frecuencia</Text>
@@ -29,6 +27,27 @@ export default function Add_task(props) {
         <Text style={styles.label}>Dificultad</Text>
         <TextInput style={styles.textInput}> </TextInput>
       </View>
+
+      <View style={styles.buttonWrapper}>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate("Task");
+          }}
+        >
+          <View style={styles.buttonCancel}>
+            <Text style={styles.textButton}>+</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Task");
+          }}
+        >
+          <View style={styles.buttonSubmit}>
+            <Text style={styles.textButton}>+</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -36,61 +55,52 @@ export default function Add_task(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5fa8ff",
-    alignItems: "center",
-    width: "100%",
-    height: "100%",
+    backgroundColor: "#E8EAED",
+    alignItems: "center"
   },
   title: {
-    textAlign: "center",
-    color: "#FFF",
+    textAlign: 'center',
     fontSize: 28,
-    width: "100%",
-    height: "10%",
+    width: '100%',
+    height:'10%',
     paddingVertical: 15,
-    //backgroundColor: "#5fa8ff",
-    backgroundColor: "pink",
+    backgroundColor: "#afeeee"
   },
   taskForm: {
     width: "90%",
-    height: "50%",
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    backgroundColor: "#E8EAED",
+    backgroundColor: "#afeeee",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#1e90ff",
     paddingHorizontal: 15,
-    marginVertical: 20,
+    marginVertical: 20
   },
-  buttonWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "pink",
-    justifyContent: "space-between",
-    height: "10%",
-    width: "90%",
-  },
-
   label: {
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 10,
     marginBottom: 10,
-    width: "100%",
+    width: '100%',
     //backgroundColor: 'tomato'
   },
   textInput: {
     fontSize: 24,
     backgroundColor: "#F8F9F9",
-    height: "20%",
-    width: "100%",
-    borderRadius: 10,
+    height: '20%',
+    width: '100%',
+    borderRadius: 10
+  },
+  buttonWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   buttonSubmit: {
     width: 60,
-    height: "auto",
+    height: 60,
     backgroundColor: "green",
     borderRadius: 60,
     justifyContent: "center",
@@ -108,4 +118,5 @@ const styles = StyleSheet.create({
     borderColor: "#C0C0C0",
     borderWidth: 1,
   },
+  textButton: {},
 });

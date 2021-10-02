@@ -11,6 +11,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Home from "../screens/tasks/Home";
 import Task from "../screens/tasks/Tasks";
 import Add_task from "../screens/tasks/add_task/Add_task";
+import Edit_task from "../screens/tasks/edit_task/Edit_task";
 import SecondScreen from "../screens/tasks/SecondScreen";
 import Statistics from "../screens/statistics/Statistics";
 import Logout from "../screens/auth/Logout";
@@ -50,6 +51,7 @@ const TastNavigation = () => {
     >
       <TaskStack.Screen name="Task" component={Task}/>
       <TaskStack.Screen name="Add_task" component={Add_task}/>
+      <TaskStack.Screen name="Edit_task" component={Edit_task}/>
     </TaskStack.Navigator>
   );
 };
@@ -72,7 +74,6 @@ const MainStack = createStackNavigator();
 const Main = () => {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
-
   return (
     <Tab.Navigator>
       <Tab.Screen

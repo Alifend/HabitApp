@@ -120,9 +120,27 @@ export default function Task({ navigation }) {
         <ScrollView style={styles.items}>
           {data_mock.map((item, index) => {
             return (
-              // <Text> {item.name}</Text>
-              <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Card_task {...item, navigation } />
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  navigation.navigate("Edit_task");
+                }}
+              >
+                {!item.isDone && (
+                  <Card_task {...item} navigation={navigation} />
+                )}
+              </TouchableOpacity>
+            );
+          })}
+          {data_mock.map((item, index) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  navigation.navigate("Edit_task");
+                }}
+              >
+                {item.isDone && <Card_task {...item} navigation={navigation} />}
               </TouchableOpacity>
             );
           })}
@@ -181,7 +199,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     marginLeft: 12,
-    marginVertical: 5
+    marginVertical: 5,
   },
   input: {
     paddingVertical: 15,
@@ -196,11 +214,11 @@ const styles = StyleSheet.create({
   },
   addTask: {
     position: "absolute",
-    bottom: 15,
+    bottom: 10,
     right: 20,
     width: 50,
     height: 50,
-    backgroundColor: "#5DADE2",
+    backgroundColor: "#1e90ff",
     borderRadius: 60,
     justifyContent: "center",
     alignItems: "center",
