@@ -10,36 +10,98 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Modal,
+  Alert,
+  Pressable,
 } from "react-native";
 import { ceil } from "react-native-reanimated";
 
 export default function Add_task(props) {
+  const [modalVisible, setModalVisible] = useState(true);
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Crear Tarea:</Text>
-      <View style={styles.taskForm}>
-        <Text style={styles.label}>Descripción</Text>
-        <TextInput style={styles.textInput}> </TextInput>
-        <Text style={styles.label}>Descripción</Text>
-        <TextInput style={styles.textInput}> </TextInput>
-        <Text style={styles.label}>Frecuencia</Text>
-        <TextInput style={styles.textInput}> </TextInput>
-        <Text style={styles.label}>Cuando</Text>
-        <TextInput style={styles.textInput}> </TextInput>
-        <Text style={styles.label}>Dificultad</Text>
-        <TextInput style={styles.textInput}> </TextInput>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}
+    >
+      <Pressable
+        style={[styles.button, styles.buttonClose]}
+        onPress={() => {
+          setModalVisible(!modalVisible);
+          props.navigation.navigate("Task");
+        }}
+      >
+        <Text style={styles.textStyle}>X</Text>
+      </Pressable>
+      <View style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.titleComponent}>
+            <Text style={styles.titleText}>Crear Hábito</Text>
+            <TouchableOpacity
+              style={styles.buttonCancel}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                props.navigation.navigate("Task");
+              }}
+            >
+              <Text style={styles.textCancel}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonCreate}
+              onPress={() => {
+                props.navigation.navigate("Task");
+              }}
+            >
+              <Text style={styles.textCreate}>Crear</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <Text>Título*</Text>
+            <TextInput
+              style={styles.titleInput}
+              placeholder="Añadir un título"
+            ></TextInput>
+            <Text>Notas</Text>
+            <TextInput
+              style={styles.titleInput}
+              placeholder="Añadir un título"
+            ></TextInput>
+          </View>
+        </View>
       </View>
-    </View>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
+  textCancel: {
+    color: "white",
+  },
+  textCreate: {
+    color: "#1e90ff",
+  },
+  buttonCreate: {
+    backgroundColor: "#d7ccec",
+  },
+  titleComponent: {
+    width: "100%",
+    backgroundColor: "#1e90ff",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    backgroundColor: "tomato",
+  },
+  titleText: {
+    color: "white",
+  },
   container: {
-    flex: 1,
-    backgroundColor: "#5fa8ff",
+    backgroundColor: "#1e90ff",
     alignItems: "center",
     width: "100%",
-    height: "100%",
+    height: "40%",
   },
   title: {
     textAlign: "center",
@@ -99,13 +161,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonCancel: {
-    width: 60,
     height: 60,
-    backgroundColor: "red",
-    borderRadius: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#C0C0C0",
-    borderWidth: 1,
+    backgroundColor: "#1e90ff",
   },
 });
