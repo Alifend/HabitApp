@@ -21,9 +21,6 @@ import userServices from "../../services/userServices";
 
 export default function ({ navigation }) {
   const { isDarkmode, setTheme } = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
@@ -40,7 +37,8 @@ export default function ({ navigation }) {
       .createUserWithEmailAndPassword(userInfo.email, userInfo.password)
       .then((userCredentials) => {
         const uid = userCredentials.user.uid;
-        userServices.register({ ...userInfo, password: "", uid });
+        const { email, username, gender } = userInfo;
+        userServices.register({ email, gender, username }, uid);
       })
       .catch(function (error) {
         // Handle Errors here.

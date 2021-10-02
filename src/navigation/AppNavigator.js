@@ -20,8 +20,10 @@ import Register from "../screens/auth/Register";
 import ForgetPassword from "../screens/auth/ForgetPassword";
 
 import Loading from "../screens/utils/Loading";
-
+import useFetch from "../hooks/useFetch";
 // Better put your these secret keys in .env file
+const API = "https://habitapp-backend.herokuapp.com/users/";
+
 const firebaseConfig = {
   apiKey: "AIzaSyByZiObxT3jhwOpJVpyJr-PX453jq-Nbbg",
   authDomain: "habitapp-4056f.firebaseapp.com",
@@ -54,6 +56,9 @@ const Auth = () => {
 const MainStack = createStackNavigator();
 
 const Main = () => {
+  const data = useContext(AuthContext);
+  const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
+
   return (
     <Tab.Navigator>
       <Tab.Screen
