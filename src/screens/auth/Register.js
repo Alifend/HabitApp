@@ -21,9 +21,6 @@ import userServices from "../../services/userServices";
 
 export default function ({ navigation }) {
   const { isDarkmode, setTheme } = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
