@@ -37,7 +37,8 @@ export default function ({ navigation }) {
       .createUserWithEmailAndPassword(userInfo.email, userInfo.password)
       .then((userCredentials) => {
         const uid = userCredentials.user.uid;
-        userServices.register({ ...userInfo, password: "", uid });
+        const { email, username, gender } = userInfo;
+        userServices.register({ email, gender, username }, uid);
       })
       .catch(function (error) {
         // Handle Errors here.
