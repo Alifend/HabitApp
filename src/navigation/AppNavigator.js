@@ -13,7 +13,7 @@ import Task from "../screens/tasks/Tasks";
 import Add_task from "../screens/tasks/add_task/Add_task";
 import SecondScreen from "../screens/tasks/SecondScreen";
 import Statistics from "../screens/statistics/Statistics";
-
+import Logout from "../screens/auth/Logout";
 // Auth screens
 import Login from "../screens/auth/Login";
 import Register from "../screens/auth/Register";
@@ -81,29 +81,32 @@ const Main = () => {
         name="Profile"
         component={SecondScreen}
       />
-      <Tab.Screen
-        options={{
-          tabBarLabel: "Statistics",
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="google-analytics" color={color} size={size}/>
-          ),
-        }}
-        name="Statistics"
-        component={Statistics}
-      />
+      {!loading && (
+        <Tab.Screen
+          options={{
+            tabBarLabel: "Statistics",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="google-analytics"
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+          name="Statistics"
+        >
+          {() => <Statistics tasks={info} />}
+        </Tab.Screen>
+      )}
       <Tab.Screen
         options={{
           tabBarLabel: "Logout",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="logout" color={color} size={size}/>
+            <MaterialCommunityIcons name="logout" color={color} size={size} />
           ),
-          onPress: () => {
-            firebase.auth.signOut();
-          }
         }}
-      
-        name="Login"
-        component={Login}
+        name="Logout"
+        component={Logout}
       />
     </Tab.Navigator>
   );

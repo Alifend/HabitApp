@@ -1,6 +1,8 @@
 import { AuthContext } from "../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useContext } from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -9,7 +11,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  ScrollView,
 } from "react-native";
 import { Button } from "react-native-rapi-ui";
 import useFetch from "../../hooks/useFetch";
@@ -17,6 +20,53 @@ const API = "https://habitapp-backend.herokuapp.com/users/";
 import Card_task from "./card_task/Card_task";
 import * as firebase from "firebase";
 
+const data_mock = [
+  {
+    isDone: true,
+    description: "asdsad",
+    name: "algo",
+  },
+  {
+    isDone: false,
+    description: "asddddd",
+    name: "asdfkljasdklasjdklasjd",
+  },
+  {
+    isDone: true,
+    description: "a,lsjdaklsjdsakljdkaslj",
+    name: "klasjdklasdjsklasjdklasjdklasjdlkasdjalksdjaskldj",
+  },
+  {
+    isDone: true,
+    description: "asdsad",
+    name: "algo",
+  },
+  {
+    isDone: false,
+    description: "asddddd",
+    name: "asdfkljasdklasjdklasjd",
+  },
+  {
+    isDone: true,
+    description: "a,lsjdaklsjdsakljdkaslj",
+    name: "klasjdklasdjsklasjdklasjdklasjdlkasdjalksdjaskldj",
+  },
+  {
+    isDone: true,
+    description: "asdsad",
+    name: "algo",
+  },
+  {
+    isDone: false,
+    description: "asddddd",
+    name: "asdfkljasdklasjdklasjd",
+  },
+  {
+    isDone: true,
+    description: "a,lsjdaklsjdsakljdkaslj",
+    name: "klasjdklasdjsklasjdklasjdklasjdlkasdjalksdjaskldj",
+  },
+];
 export default function Task({ navigation }) {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id, "", "GET");
@@ -37,50 +87,47 @@ export default function Task({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Button
-        status="danger"
-        text="Logout"
-        onPress={() => {
-          firebase.auth().signOut();
-        }}
-        style={{
-          marginTop: 10
-        }}
-      />
       <View style={styles.tasksWrapper}>
-        {!loading && <Text> {info.username} </Text>}
         <Text style={styles.sectionTitle}>Today's tasks </Text>
+        {!loading && (
+          <Text style={{ fontSize: 25, marginBottom: 10 }}>
+            {" "}
+            {info.username}{" "}
+          </Text>
+        )}
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={styles.writeTaskWrapper}
+        >
+          <TextInput
+            style={styles.input}
+            placeholder={"Write a task"}
+            value={task}
+            onChangeText={(text) => setTask(text)}
+          ></TextInput>
 
-        <View style={styles.items}>
-          {taskItems.map((item, index) => {
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Add_task");
+            }}
+          >
+            <View style={styles.addWrapper}>
+              <MaterialCommunityIcons name="magnify" color={"gray"} size={25} />
+            </View>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+
+        <ScrollView style={styles.items}>
+          {data_mock.map((item, index) => {
             return (
+              // <Text> {item.name}</Text>
               <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Card_task text={item} />
+                <Card_task {...item} />
               </TouchableOpacity>
             );
           })}
-        </View>
+        </ScrollView>
       </View>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder={"Write a task"}
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        ></TextInput>
-
-        <TouchableOpacity onPress={() => {
-                navigation.navigate("Add_task");
-              }}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -88,35 +135,40 @@ export default function Task({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8EAED"
+    backgroundColor: "#E8EAED",
   },
   tasksWrapper: {
-    paddingTop: 80,
-    paddingHorizontal: 20
+    paddingTop: 30,
+    paddingHorizontal: 20,
+    height: "100%",
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   items: {
-    marginTop: 30
+    // marginTop: 30,
+    // backgroundColor: "tomato",
+    // flex: 1,
+    // justifyContent: "space-around",
+    // height: "50%",
+    // marginBottom: 60,
+    marginTop: 10,
   },
   writeTaskWrapper: {
-    position: "absolute",
-    bottom: 20,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "center"
+    alignItems: "center",
   },
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
     backgroundColor: "#FFF",
-    borderRadius: 60,
+    borderRadius: 25,
     borderColor: "#C0C0C0",
     borderWidth: 1,
-    width: 280
+    width: 280,
   },
   addWrapper: {
     width: 60,
@@ -126,7 +178,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "#C0C0C0",
-    borderWidth: 1
+    borderWidth: 1,
   },
-  addText: {}
+  addText: {},
 });
