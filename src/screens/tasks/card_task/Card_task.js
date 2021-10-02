@@ -6,7 +6,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  CheckBox,
+  CheckBox
 } from "react-native";
 
 const Card_task = (props) => {
@@ -19,7 +19,9 @@ const Card_task = (props) => {
         />
         <Text style={styles.itemText}>{props.name}</Text>
       </View>
-      <MaterialCommunityIcons name="pencil" color={"gray"} size={25} />
+      <TouchableOpacity>
+        <MaterialCommunityIcons name="pencil" color={"gray"} size={25} />
+      </TouchableOpacity>
     </View>
   );
 };

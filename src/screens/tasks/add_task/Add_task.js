@@ -16,7 +16,7 @@ import { ceil } from "react-native-reanimated";
 export default function Add_task({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Crear Tarea</Text>
+      <Text style={styles.title}>Crear Tarea:</Text>
       <View style={styles.taskForm}>
         <Text style={styles.label}>Descripción</Text>
         <TextInput style={styles.textInput}> </TextInput>
@@ -56,29 +56,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#E8EAED",
-    alignItems: "center",
+    alignItems: "center"
   },
   title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    paddingTop: 60,
+    textAlign: 'center',
+    fontSize: 28,
+    width: '100%',
+    padding: 'auto',
+    height:'10%',
+    paddingVertical: 15
+
   },
   taskForm: {
     width: "90%",
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "flex-start",
+    backgroundColor: "#EAEDED",
+    borderRadius: 10,
+    borderWidth: 0.1,
+    paddingHorizontal: 15
   },
   label: {
     fontSize: 22,
     fontWeight: "bold",
     marginTop: 10,
     marginBottom: 10,
+    width: '100%',
+    //backgroundColor: 'tomato'
   },
   textInput: {
     fontSize: 24,
-    backgroundColor: "#fff",
-    width: "100%",
+    backgroundColor: "#F8F9F9",
+    height: '20%',
+    width: '100%',
+    borderRadius: 10
   },
   buttonWrapper: {
     flexDirection: "row",

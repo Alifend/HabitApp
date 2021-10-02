@@ -39,6 +39,20 @@ if (firebase.apps.length === 0) {
 
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const TaskStack = createStackNavigator();
+
+const TastNavigation = () => {
+  return (
+    <TaskStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <TaskStack.Screen name="Task" component={Task}/>
+      <TaskStack.Screen name="Add_task" component={Add_task}/>
+    </TaskStack.Navigator>
+  );
+};
 const Auth = () => {
   return (
     <AuthStack.Navigator
@@ -69,7 +83,7 @@ const Main = () => {
           ),
         }}
         name="Task"
-        component={Task}
+        component={TastNavigation}
       />
       <Tab.Screen
         options={{
@@ -120,6 +134,7 @@ export default () => {
       {user == null && <Loading />}
       {user == false && <Auth />}
       {user == true && <Main />}
+      {/*user == true && <TaskStack />*/}
     </NavigationContainer>
   );
 };

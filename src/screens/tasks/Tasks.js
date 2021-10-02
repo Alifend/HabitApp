@@ -88,30 +88,30 @@ export default function Task({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's tasks </Text>
-        {!loading && (
-          <Text style={{ fontSize: 25, marginBottom: 10 }}>
-            {" "}
-            {info.username}{" "}
+        <View style={styles.titleContainer}>
+          <Text style={styles.sectionTitle}>
+            Bienvenido{" "}
+            {!loading && (
+              <Text style={styles.sectionTitleName}>{info.username}</Text>
+            )}
           </Text>
-        )}
+          <Text style={styles.sectionTitle}>{"Estas son tus tareas:"}</Text>
+        </View>
+
+        <Text style={styles.label}>Buscar tareas:</Text>
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
           style={styles.writeTaskWrapper}
         >
           <TextInput
             style={styles.input}
-            placeholder={"Write a task"}
+            placeholder={"Buscar tareas."}
             value={task}
             onChangeText={(text) => setTask(text)}
           ></TextInput>
 
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Add_task");
-            }}
-          >
-            <View style={styles.addWrapper}>
+          <TouchableOpacity>
+            <View style={styles.searchIcon}>
               <MaterialCommunityIcons name="magnify" color={"gray"} size={25} />
             </View>
           </TouchableOpacity>
@@ -122,12 +122,25 @@ export default function Task({ navigation }) {
             return (
               // <Text> {item.name}</Text>
               <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Card_task {...item} />
+                <Card_task {...item, navigation } />
               </TouchableOpacity>
             );
           })}
         </ScrollView>
       </View>
+
+      <TouchableOpacity
+        style={styles.addTask}
+        onPress={() => {
+          navigation.navigate("Add_task");
+        }}
+      >
+        <View>
+          <Text>
+            <MaterialCommunityIcons name="plus" color={"white"} size={25} />
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -138,21 +151,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8EAED",
   },
   tasksWrapper: {
-    paddingTop: 30,
     paddingHorizontal: 20,
     height: "100%",
   },
+  titleContainer: {
+    paddingVertical: 15,
+    //backgroundColor: 'pink'
+  },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 28,
+    textAlign: "center",
+  },
+  sectionTitleName: {
     fontWeight: "bold",
   },
   items: {
-    // marginTop: 30,
-    // backgroundColor: "tomato",
-    // flex: 1,
-    // justifyContent: "space-around",
-    // height: "50%",
-    // marginBottom: 60,
     marginTop: 10,
   },
   writeTaskWrapper: {
@@ -160,20 +173,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    borderColor: "#C0C0C0",
+    borderWidth: 1,
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+  },
+  label: {
+    fontSize: 18,
+    marginLeft: 12,
+    marginVertical: 5
   },
   input: {
     paddingVertical: 15,
-    paddingHorizontal: 15,
-    backgroundColor: "#FFF",
-    borderRadius: 25,
-    borderColor: "#C0C0C0",
-    borderWidth: 1,
-    width: 280,
+    width: "85%",
+    fontSize: 18,
+    marginLeft: 8,
   },
-  addWrapper: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#FFF",
+  searchIcon: {
+    paddingVertical: 15,
+    width: "auto",
+    marginRight: 8,
+  },
+  addTask: {
+    position: "absolute",
+    bottom: 15,
+    right: 20,
+    width: 50,
+    height: 50,
+    backgroundColor: "#5DADE2",
     borderRadius: 60,
     justifyContent: "center",
     alignItems: "center",
