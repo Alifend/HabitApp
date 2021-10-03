@@ -10,28 +10,27 @@ import {
 } from "react-native";
 import { color } from "react-native-reanimated";
 
-const Card_task = (props) => {
+const Card_task = ({ navigation, item }) => {
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
         <CheckBox
           tintColors={{ true: "#1e90ff", false: "black" }}
-          value={props.isDone}
+          value={item.isDone}
           onValueChange={() => console.log("Hola")}
         />
         <Text
           style={[
-            props.isDone ? { textDecorationLine: "line-through" } : {},
+            item.isDone ? { textDecorationLine: "line-through" } : {},
             styles.itemText,
           ]}
         >
-          {props.name}
+          {item.name}
         </Text>
       </View>
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate("Edit_task");
-          console.log(props);
+          navigation.navigate("Edit_task", { item });
         }}
       >
         <MaterialCommunityIcons name="pencil" color={"gray"} size={25} />

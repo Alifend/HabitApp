@@ -1,6 +1,6 @@
 import { AuthContext } from "../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import {
@@ -20,69 +20,31 @@ const API = "https://habitapp-backend.herokuapp.com/users/";
 import Card_task from "./card_task/Card_task";
 import * as firebase from "firebase";
 
-const data_mock = [
-  {
-    isDone: true,
-    description: "asdsad",
-    name: "algo",
-  },
-  {
-    isDone: false,
-    description: "asddddd",
-    name: "asdfkljasdklasjdklasjd",
-  },
-  {
-    isDone: true,
-    description: "a,lsjdaklsjdsakljdkaslj",
-    name: "klasjdklasdjsklasjdklasjdklasjdlkasdjalksdjaskldj",
-  },
-  {
-    isDone: true,
-    description: "asdsad",
-    name: "algo",
-  },
-  {
-    isDone: false,
-    description: "asddddd",
-    name: "asdfkljasdklasjdklasjd",
-  },
-  {
-    isDone: true,
-    description: "a,lsjdaklsjdsakljdkaslj",
-    name: "klasjdklasdjsklasjdklasjdklasjdlkasdjalksdjaskldj",
-  },
-  {
-    isDone: true,
-    description: "asdsad",
-    name: "algo",
-  },
-  {
-    isDone: false,
-    description: "asddddd",
-    name: "asdfkljasdklasjdklasjd",
-  },
-  {
-    isDone: true,
-    description: "a,lsjdaklsjdsakljdkaslj",
-    name: "klasjdklasdjsklasjdklasjdklasjdlkasdjalksdjaskldj",
-  },
-];
-export default function Task({ navigation }) {
+export default function Task({ navigation, tasks }) {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id, "", "GET");
-  const [task, setTask] = useState();
+  const [taskFiltered, setTaskFiltered] = useState(tasks);
   const [taskItems, setTaskItems] = useState([]);
-
   const handelAddTask = () => {
     Keyboard.dismiss();
-    setTaskItems([...taskItems, task]);
-    setTask(null);
+    // setTaskItems([...taskItems, task]);
+    // setTask(null);
+  };
+  useEffect(() => {});
+  const completeTask = (index) => {
+    // let itemsCopy = [...taskItems];
+    // itemsCopy.splice(index, 1);
+    // setTaskItems(itemsCopy);
   };
 
-  const completeTask = (index) => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
+  const handleSearch = (text) => {
+    let temp = [];
+    tasks.forEach((element) => {
+      if (element.name.includes(text)) {
+        temp.push(element);
+      }
+    });
+    setTaskFiltered(temp);
   };
 
   return (
@@ -99,15 +61,11 @@ export default function Task({ navigation }) {
         </View>
 
         <Text style={styles.label}>Buscar tareas:</Text>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={styles.writeTaskWrapper}
-        >
+        <View style={styles.writeTaskWrapper}>
           <TextInput
             style={styles.input}
             placeholder={"Buscar tareas."}
-            value={task}
-            onChangeText={(text) => setTask(text)}
+            onChangeText={(text) => handleSearch(text)}
           ></TextInput>
 
           <TouchableOpacity>
@@ -115,32 +73,34 @@ export default function Task({ navigation }) {
               <MaterialCommunityIcons name="magnify" color={"gray"} size={25} />
             </View>
           </TouchableOpacity>
-        </KeyboardAvoidingView>
+        </View>
 
         <ScrollView style={styles.items}>
-          {data_mock.map((item, index) => {
+          {taskFiltered.map((item, index) => {
             return (
               <TouchableOpacity
                 key={index}
                 onPress={() => {
-                  navigation.navigate("Edit_task");
+                  navigation.navigate("Edit_task", { item });
                 }}
               >
                 {!item.isDone && (
-                  <Card_task {...item} navigation={navigation} />
+                  <Card_task item={item} navigation={navigation} />
                 )}
               </TouchableOpacity>
             );
           })}
-          {data_mock.map((item, index) => {
+          {taskFiltered.map((item, index) => {
             return (
               <TouchableOpacity
                 key={index}
                 onPress={() => {
-                  navigation.navigate("Edit_task");
+                  navigation.navigate("Edit_task", { item });
                 }}
               >
-                {item.isDone && <Card_task {...item} navigation={navigation} />}
+                {item.isDone && (
+                  <Card_task item={item} navigation={navigation} />
+                )}
               </TouchableOpacity>
             );
           })}

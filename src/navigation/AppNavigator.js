@@ -42,16 +42,18 @@ const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const TaskStack = createStackNavigator();
 
-const TastNavigation = () => {
+const TastNavigation = ({ tasks }) => {
   return (
     <TaskStack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <TaskStack.Screen name="Task" component={Task}/>
-      <TaskStack.Screen name="Add_task" component={Add_task}/>
-      <TaskStack.Screen name="Edit_task" component={Edit_task}/>
+      <TaskStack.Screen name="Task">
+        {(props) => <Task tasks={tasks} {...props} />}
+      </TaskStack.Screen>
+      <TaskStack.Screen name="Add_task" component={Add_task} />
+      <TaskStack.Screen name="Edit_task" component={Edit_task} />
     </TaskStack.Navigator>
   );
 };
@@ -75,7 +77,11 @@ const Main = () => {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      tabBarOptions={{
+        keyboardHidesTabBar: true,
+      }}
+    >
       <Tab.Screen
         options={{
           tabBarLabel: "Home",
@@ -84,8 +90,9 @@ const Main = () => {
           ),
         }}
         name="Task"
-        component={TastNavigation}
-      />
+      >
+        {!loading ? () => <TastNavigation tasks={info} /> : () => null}
+      </Tab.Screen>
       <Tab.Screen
         options={{
           tabBarLabel: "Profile",
@@ -110,7 +117,7 @@ const Main = () => {
           }}
           name="Statistics"
         >
-          {() => <Statistics tasks={info} />}
+          {(props) => <Statistics tasks={info} {...props} />}
         </Tab.Screen>
       )}
       <Tab.Screen
