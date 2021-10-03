@@ -1,6 +1,7 @@
 import { AuthContext } from "../../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useContext } from "react";
+import { Picker } from "@react-native-picker/picker";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -15,11 +16,12 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import { ceil } from "react-native-reanimated";
 
-export default function Add_task(props) {
-  const [selectedLanguage, setSelectedLanguage] = useState();
+export default function Edit_task(props) {
+  const { item } = props.route.params;
+  const [difficulty, setDifficulty] = useState(item.difficulty);
+  const [resetCounter, setResetCounter] = useState(item.resetCounter);
   return (
     <ScrollView
       style={styles.scrollView}
@@ -28,7 +30,7 @@ export default function Add_task(props) {
       <View style={styles.wrapper}>
         <View style={styles.titleContainer}>
           <View style={styles.titleComponent}>
-            <Text style={styles.titleText}>Crear Hábito</Text>
+            <Text style={styles.titleText}>Edit Habit</Text>
             <View
               style={{
                 flexDirection: "row",
@@ -43,7 +45,7 @@ export default function Add_task(props) {
                   props.navigation.navigate("Task");
                 }}
               >
-                <Text style={styles.textCancel}>Cancelar</Text>
+                <Text style={styles.textCancel}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonCreate}
@@ -52,21 +54,22 @@ export default function Add_task(props) {
                   props.navigation.navigate("Task");
                 }}
               >
-                <Text style={styles.textCreate}>Crear</Text>
+                <Text style={styles.textCreate}>Edit </Text>
               </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.mainSection}>
-            <Text style={styles.mainTextSection}>Título*</Text>
+            <Text style={styles.mainTextSection}>Title*</Text>
             <TextInput
               style={styles.mainTextTitle}
-              placeholder="Añadir un título"
+              value={item.name}
             ></TextInput>
-            <Text style={styles.mainTextSection}>Notas</Text>
+            <Text style={styles.mainTextSection}>Notes</Text>
             <TextInput
               style={styles.titleTextNotas}
               placeholder="Añadir notas"
+              value={item.description}
             ></TextInput>
           </View>
         </View>
@@ -91,24 +94,35 @@ export default function Add_task(props) {
           </View>
           <View style={styles.formContainer}>
             <View style={styles.formSubContainer}>
-              <Text style={styles.bodyTextSection}>Dificultad</Text>
+              <Text style={styles.bodyTextSection}>Difficulty</Text>
               <Picker
-                selectedValue={selectedLanguage}
+                selectedValue={difficulty}
                 onValueChange={(itemValue, itemIndex) =>
-                  setSelectedLanguage(itemValue)
+                  setDifficulty(itemValue)
                 }
                 style={styles.formInput}
               >
-                <Picker.Item label="Easy *" value="1" />
-                <Picker.Item label="Medium **" value="2" />
-                <Picker.Item label="Hard ***" value="3" />
+                <Picker.Item label="Easy *" value={1} />
+                <Picker.Item label="Medium **" value={2} />
+                <Picker.Item label="Hard ***" value={3} />
               </Picker>
               {/* <TextInput style={styles.formInput}></TextInput> */}
-              <Text style={styles.bodyTextSection}>Etiquetas</Text>
-              <TextInput style={styles.formInput}></TextInput>
+              {/* <Text style={styles.bodyTextSection}>Etiquetas</Text>
+              <TextInput style={styles.formInput}></TextInput> */}
 
               <Text style={styles.bodyTextSection}>Reset Counter</Text>
-              <TextInput style={styles.formInput}></TextInput>
+              <Picker
+                selectedValue={resetCounter}
+                onValueChange={(itemValue, itemIndex) =>
+                  setResetCounter(itemValue)
+                }
+                style={styles.formInput}
+              >
+                <Picker.Item label="Diary" value={1} />
+                <Picker.Item label="Weekly" value={2} />
+                <Picker.Item label="Monthly" value={3} />
+              </Picker>
+              {/* <TextInput style={styles.formInput}></TextInput> */}
             </View>
           </View>
         </View>
@@ -118,7 +132,7 @@ export default function Add_task(props) {
             props.navigation.navigate("Task");
           }}
         >
-          <Text style={styles.secondButtonCreateText}>Crear</Text>
+          <Text style={styles.secondButtonCreateText}>Edit </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -159,6 +173,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   formInput: {
+    height: 30,
     borderRadius: 5,
     padding: 5,
     shadowColor: "#000",

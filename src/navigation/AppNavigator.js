@@ -11,6 +11,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Home from "../screens/tasks/Home";
 import Task from "../screens/tasks/Tasks";
 import Add_task from "../screens/tasks/add_task/Add_task";
+import Edit_task from "../screens/tasks/edit_task/Edit_task";
 import SecondScreen from "../screens/tasks/SecondScreen";
 import Statistics from "../screens/statistics/Statistics";
 import Logout from "../screens/auth/Logout";
@@ -39,6 +40,23 @@ if (firebase.apps.length === 0) {
 
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const TaskStack = createStackNavigator();
+
+const TastNavigation = ({ tasks }) => {
+  return (
+    <TaskStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <TaskStack.Screen name="Task">
+        {(props) => <Task tasks={tasks} {...props} />}
+      </TaskStack.Screen>
+      <TaskStack.Screen name="Add_task" component={Add_task} />
+      <TaskStack.Screen name="Edit_task" component={Edit_task} />
+    </TaskStack.Navigator>
+  );
+};
 const Auth = () => {
   return (
     <AuthStack.Navigator
@@ -58,9 +76,12 @@ const MainStack = createStackNavigator();
 const Main = () => {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
-
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      tabBarOptions={{
+        keyboardHidesTabBar: true,
+      }}
+    >
       <Tab.Screen
         options={{
           tabBarLabel: "Home",
@@ -69,8 +90,9 @@ const Main = () => {
           ),
         }}
         name="Task"
-        component={Task}
-      />
+      >
+        {!loading ? () => <TastNavigation tasks={info} /> : () => null}
+      </Tab.Screen>
       <Tab.Screen
         options={{
           tabBarLabel: "Profile",
@@ -95,7 +117,7 @@ const Main = () => {
           }}
           name="Statistics"
         >
-          {() => <Statistics tasks={info} />}
+          {(props) => <Statistics tasks={info} {...props} />}
         </Tab.Screen>
       )}
       <Tab.Screen
@@ -120,6 +142,7 @@ export default () => {
       {user == null && <Loading />}
       {user == false && <Auth />}
       {user == true && <Main />}
+      {/*user == true && <TaskStack />*/}
     </NavigationContainer>
   );
 };
