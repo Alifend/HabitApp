@@ -1,51 +1,63 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-const Card_task = (props) => {
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  CheckBox,
+} from "react-native";
+import { color } from "react-native-reanimated";
 
+const Card_task = ({ navigation, item }) => {
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
-        <View style={styles.square}></View>
-        <Text style={styles.itemText}>{props.text}</Text>
+        <CheckBox
+          tintColors={{ true: "#1e90ff", false: "black" }}
+          value={item.isDone}
+          onValueChange={() => console.log("Hola")}
+        />
+        <Text
+          style={[
+            item.isDone ? { textDecorationLine: "line-through" } : {},
+            styles.itemText,
+          ]}
+        >
+          {item.name}
+        </Text>
       </View>
-      <View style={styles.circular}></View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Edit_task", { item });
+        }}
+      >
+        <MaterialCommunityIcons name="pencil" color={"gray"} size={25} />
+      </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 15,
     borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
   itemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap'
-  },
-  square: {
-    width: 24,
-    height: 24,
-    backgroundColor: '#55BCF6',
-    opacity: 0.4,
-    borderRadius: 5,
-    marginRight: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
   },
   itemText: {
-    maxWidth: '80%',
-  },
-  circular: {
-    width: 12,
-    height: 12,
-    borderColor: '#55BCF6',
-    borderWidth: 2,
-    borderRadius: 6,
+    width: "80%",
+    fontSize: 18,
   },
 });
 

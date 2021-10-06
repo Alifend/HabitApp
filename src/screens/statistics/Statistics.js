@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { PieChart } from "react-native-chart-kit";
 import { AuthContext } from "../../provider/AuthProvider";
 import { View, Linking, Dimensions } from "react-native";
@@ -16,26 +16,27 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import useFetch from "../../hooks/useFetch";
 const API = "https://habitapp-backend.herokuapp.com/users/";
-const data1 = [
-  {
-    name: "Tareas realizadas",
-    population: 21500000,
-    color: "rgba(131, 167, 234, 1)",
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 10,
-  },
-  {
-    name: "Tareas no realizadas",
-    population: 2800000,
-    color: "#F00",
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 10,
-  },
-];
-const Statistics = () => {
+
+const Statistics = ({ tasks }) => {
   const { isDarkmode, setTheme } = useTheme();
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id, "", "GET");
+  const [tasksTrue, setTasksTrue] = useState(0);
+  const [tasksFalse, setTasksFalse] = useState(0);
+
+  useEffect(() => {
+    tasks.forEach((task) => {
+      console.log(task);
+
+      if (task.isDone === true) {
+        setTasksTrue((current) => current + 1);
+      }
+      if (task.isDone === false) {
+        setTasksFalse((current) => current + 1);
+      }
+    });
+  }, [info]);
+
   return (
     <Layout>
       <TopNav
@@ -65,7 +66,22 @@ const Statistics = () => {
         }}
       >
         <PieChart
-          data={data1}
+          data={[
+            {
+              name: "Tareas realizadas",
+              population: tasksTrue,
+              color: "rgba(131, 167, 234, 1)",
+              legendFontColor: "#7F7F7F",
+              legendFontSize: 10,
+            },
+            {
+              name: "Tareas no realizadas",
+              population: tasksFalse,
+              color: "#F00",
+              legendFontColor: "#7F7F7F",
+              legendFontSize: 10,
+            },
+          ]}
           width={Dimensions.get("window").width}
           height={220}
           chartConfig={{
