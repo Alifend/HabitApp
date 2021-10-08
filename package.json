@@ -26,6 +26,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-chart-kit": "^6.11.0",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-onboarding-swiper": "^1.1.4",
     "react-native-rapi-ui": "^0.2.1",
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
