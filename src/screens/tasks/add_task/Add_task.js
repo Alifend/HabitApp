@@ -1,6 +1,8 @@
 import { AuthContext } from "../../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useContext } from "react";
+import useFetch from "../../../hooks/useFetch";
+import taskServices from "../../../services/taskServices";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -18,8 +20,46 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { ceil } from "react-native-reanimated";
 
+const dataMock = {
+  isDone: false,
+  resetCounter: 5,
+  description: "vid puta",
+  name: "madrugar",
+  titulo: "Madrasdasugar",
+  difficulty: 1,
+};
+
 export default function Add_task(props) {
+  const data = useContext(AuthContext);
+
+  const sendData = () => {
+    taskServices.postTask(
+      {
+        isDone: userInfo.isDone,
+        resetCounter: userInfo.resetCounter,
+        description: userInfo.description,
+        name: userInfo.name,
+        difficulty: userInfo.difficulty,
+      },
+      data.id
+    );
+  };
+
+  const [userInfo, setUserInfo] = useState({
+    isDone: false,
+    resetCounter: 1,
+    description: "",
+    name: "nombre",
+    titulo: "",
+    difficulty: 1,
+  });
+
+  const handleChange = (name, value) => {
+    setUserInfo((current) => ({ ...current, [name]: value }));
+  };
+
   const [selectedLanguage, setSelectedLanguage] = useState();
+
   return (
     <ScrollView
       style={styles.scrollView}
@@ -48,7 +88,8 @@ export default function Add_task(props) {
               <TouchableOpacity
                 style={styles.buttonCreate}
                 onPress={() => {
-                  //Send data to backend
+                  //Send data to backend\
+                  sendData();
                   props.navigation.navigate("Task");
                 }}
               >
@@ -62,11 +103,15 @@ export default function Add_task(props) {
             <TextInput
               style={styles.mainTextTitle}
               placeholder="Añadir un título"
+              value={userInfo.name}
+              onChangeText={(text) => handleChange("name", text)}
             ></TextInput>
             <Text style={styles.mainTextSection}>Notas</Text>
             <TextInput
               style={styles.titleTextNotas}
               placeholder="Añadir notas"
+              value={userInfo.description}
+              onChangeText={(text) => handleChange("description", text)}
             ></TextInput>
           </View>
         </View>
