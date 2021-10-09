@@ -38,7 +38,7 @@ export default function Add_task(props) {
         isDone: userInfo.isDone,
         resetCounter: userInfo.resetCounter,
         description: userInfo.description,
-        titulo: userInfo.titulo,
+        name: userInfo.name,
         difficulty: userInfo.difficulty,
       },
       data.id
@@ -49,7 +49,7 @@ export default function Add_task(props) {
     isDone: false,
     resetCounter: 1,
     description: "",
-    name: "",
+    name: "nombre",
     titulo: "",
     difficulty: 1,
   });
@@ -103,8 +103,8 @@ export default function Add_task(props) {
             <TextInput
               style={styles.mainTextTitle}
               placeholder="Añadir un título"
-              value={userInfo.titulo}
-              onChangeText={(text) => handleChange("titulo", text)}
+              value={userInfo.name}
+              onChangeText={(text) => handleChange("name", text)}
             ></TextInput>
             <Text style={styles.mainTextSection}>Notas</Text>
             <TextInput
