@@ -78,6 +78,7 @@ const MainStack = createStackNavigator();
 const Main = () => {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
+  const [user, loading2] = useFetch(API + data.id, "", "GET");
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -103,8 +104,11 @@ const Main = () => {
           ),
         }}
         name="Profile"
-        component={SecondScreen}
-      />
+      >
+        {!loading2
+          ? (props) => <SecondScreen user={user} {...props} />
+          : () => null}
+      </Tab.Screen>
       {!loading && (
         <Tab.Screen
           options={{
