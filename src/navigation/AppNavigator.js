@@ -11,7 +11,6 @@ import Home from "../screens/tasks/Home";
 import Task from "../screens/tasks/Tasks";
 import Add_task from "../screens/tasks/add_task/Add_task";
 import Edit_task from "../screens/tasks/edit_task/Edit_task";
-import DeleteTask from "../screens/tasks/delete_task/DeleteTask";
 import SecondScreen from "../screens/tasks/SecondScreen";
 import Statistics from "../screens/statistics/Statistics";
 import Logout from "../screens/auth/Logout";
@@ -56,7 +55,6 @@ const TastNavigation = ({ tasks, fetchTasks }) => {
       </TaskStack.Screen>
       <TaskStack.Screen name="Add_task" component={Add_task} />
       <TaskStack.Screen name="Edit_task" component={Edit_task} />
-      <TaskStack.Screen name="Delete_task" component={DeleteTask} />
     </TaskStack.Navigator>
   );
 };
