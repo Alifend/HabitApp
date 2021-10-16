@@ -26,8 +26,6 @@ const Statistics = ({ tasks }) => {
 
   useEffect(() => {
     tasks.forEach((task) => {
-      console.log(task);
-
       if (task.isDone === true) {
         setTasksTrue((current) => current + 1);
       }
