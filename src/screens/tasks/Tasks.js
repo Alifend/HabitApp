@@ -2,7 +2,7 @@ import { AuthContext } from "../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useContext, useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { DeviceEventEmitter } from "react-native";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -19,18 +19,41 @@ import useFetch from "../../hooks/useFetch";
 const API = "https://habitapp-backend.herokuapp.com/users/";
 import Card_task from "./card_task/Card_task";
 import * as firebase from "firebase";
+import taskServices from "../../services/taskServices";
 
-export default function Task({ navigation, tasks }) {
+export default function Task({ navigation }) {
   const data = useContext(AuthContext);
+  const [taskList, setTaskList] = useState();
+
   const [info, loading] = useFetch(API + data.id, "", "GET");
-  const [taskFiltered, setTaskFiltered] = useState(tasks);
+  const [taskFiltered, setTaskFiltered] = useState();
   const [taskItems, setTaskItems] = useState([]);
+
+  useEffect(() => {
+    fetchTasks();
+    console.log("mounted!!");
+
+    DeviceEventEmitter.addListener("event.testEvent", (eventData) =>
+      fetchTasks()
+    );
+    return () => {
+      DeviceEventEmitter.removeAllListeners("event.mapMarkerSelected");
+      console.log("morí");
+    };
+  }, []);
+  const fetchTasks = async () => {
+    console.log("fue llamada");
+    setTaskFiltered(undefined);
+    setTaskList(undefined);
+    const taskData = await taskServices.getTasks(data.id);
+    setTaskList((c) => taskData.data);
+    setTaskFiltered((c) => taskData.data);
+  };
   const handelAddTask = () => {
     Keyboard.dismiss();
     // setTaskItems([...taskItems, task]);
     // setTask(null);
   };
-  useEffect(() => {});
   const completeTask = (index) => {
     // let itemsCopy = [...taskItems];
     // itemsCopy.splice(index, 1);
@@ -39,7 +62,7 @@ export default function Task({ navigation, tasks }) {
 
   const handleSearch = (text) => {
     let temp = [];
-    tasks.forEach((element) => {
+    taskList.forEach((element) => {
       if (element.name.includes(text)) {
         temp.push(element);
       }
@@ -75,36 +98,42 @@ export default function Task({ navigation, tasks }) {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.items}>
-          {taskFiltered.map((item, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  navigation.navigate("Edit_task", { item });
-                }}
-              >
-                {!item.isDone && (
-                  <Card_task item={item} navigation={navigation} />
-                )}
-              </TouchableOpacity>
-            );
-          })}
-          {taskFiltered.map((item, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  navigation.navigate("Edit_task", { item });
-                }}
-              >
-                {item.isDone && (
-                  <Card_task item={item} navigation={navigation} />
-                )}
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+        {taskFiltered && (
+          <ScrollView style={styles.items}>
+            {taskFiltered.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    navigation.navigate("Edit_task", {
+                      info: item,
+                    });
+                  }}
+                >
+                  {!item.isDone && (
+                    <Card_task item={item} navigation={navigation} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+            {taskFiltered.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    navigation.navigate("Edit_task", {
+                      info: item,
+                    });
+                  }}
+                >
+                  {item.isDone && (
+                    <Card_task item={item} navigation={navigation} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
 
       <TouchableOpacity

@@ -1,7 +1,9 @@
 import { AuthContext } from "../../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useContext } from "react";
+import { DeviceEventEmitter } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
+import taskServices from "../../../services/taskServices";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -17,11 +19,26 @@ import {
   ScrollView,
 } from "react-native";
 import { ceil } from "react-native-reanimated";
-
 export default function Edit_task(props) {
-  const { item } = props.route.params;
-  const [difficulty, setDifficulty] = useState(item.difficulty);
-  const [resetCounter, setResetCounter] = useState(item.resetCounter);
+  const { info } = props.route.params;
+  const [taskInfo, setTaskInfo] = useState(info);
+  const userInfo = useContext(AuthContext);
+
+  const handleChange = async (name, value) => {
+    const data = { ...taskInfo, [name]: value };
+    setTaskInfo(data);
+  };
+
+  const editTask = () => {
+    taskServices.editTask(taskInfo, userInfo.id, taskInfo.id);
+    DeviceEventEmitter.emit("event.testEvent");
+  };
+
+  useEffect(() => {
+    return () => {
+      DeviceEventEmitter.removeAllListeners("event.mapMarkerSelected");
+    };
+  }, []);
   return (
     <ScrollView
       style={styles.scrollView}
@@ -50,7 +67,7 @@ export default function Edit_task(props) {
               <TouchableOpacity
                 style={styles.buttonCreate}
                 onPress={() => {
-                  //Send data to backend
+                  editTask();
                   props.navigation.navigate("Task");
                 }}
               >
@@ -63,13 +80,19 @@ export default function Edit_task(props) {
             <Text style={styles.mainTextSection}>Title*</Text>
             <TextInput
               style={styles.mainTextTitle}
-              value={item.name}
+              value={taskInfo.name}
+              onChangeText={(text) => {
+                handleChange("name", text);
+              }}
             ></TextInput>
             <Text style={styles.mainTextSection}>Notes</Text>
             <TextInput
               style={styles.titleTextNotas}
               placeholder="Añadir notas"
-              value={item.description}
+              value={taskInfo.description}
+              onChangeText={(text) => {
+                handleChange("description", text);
+              }}
             ></TextInput>
           </View>
         </View>
@@ -96,9 +119,9 @@ export default function Edit_task(props) {
             <View style={styles.formSubContainer}>
               <Text style={styles.bodyTextSection}>Difficulty</Text>
               <Picker
-                selectedValue={difficulty}
+                selectedValue={taskInfo.difficulty}
                 onValueChange={(itemValue, itemIndex) =>
-                  setDifficulty(itemValue)
+                  handleChange("difficulty", itemValue)
                 }
                 style={styles.formInput}
               >
@@ -112,9 +135,9 @@ export default function Edit_task(props) {
 
               <Text style={styles.bodyTextSection}>Reset Counter</Text>
               <Picker
-                selectedValue={resetCounter}
+                selectedValue={taskInfo.resetCounter}
                 onValueChange={(itemValue, itemIndex) =>
-                  setResetCounter(itemValue)
+                  handleChange("resetCounter", itemValue)
                 }
                 style={styles.formInput}
               >
