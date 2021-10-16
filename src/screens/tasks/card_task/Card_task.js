@@ -62,13 +62,23 @@ const Card_task = ({ navigation, item }) => {
             size={25}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <MaterialCommunityIcons
-            name="delete-outline"
-            color={"#d35158"}
-            size={25}
-          />
-        </TouchableOpacity>
+        {info.isDone ? (
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <MaterialCommunityIcons
+              name="check-outline"
+              color={"#0f9d58"}
+              size={25}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <MaterialCommunityIcons
+              name="delete-outline"
+              color={"#d35158"}
+              size={25}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Modal */}
@@ -90,20 +100,40 @@ const Card_task = ({ navigation, item }) => {
               <MaterialCommunityIcons name="close" color={"gray"} size={25} />
             </TouchableOpacity>
 
-            <Text style={styles.modalText}>
-              ¿Está seguro que desea borrar la tarea?
-            </Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => {
-                taskServices.deleteTask(userInfo.id, info.id);
-                setModalVisible(!modalVisible);
-                //debo re renderizar acá
-                DeviceEventEmitter.emit("event.testEvent");
-              }}
-            >
-              <Text style={styles.textStyle}>Borrar</Text>
-            </Pressable>
+            {info.isDone ? (
+              <Text style={styles.modalText}>
+                Ganarás monedas cuando realices tus tareas! :)
+              </Text>
+            ) : (
+              <Text style={styles.modalText}>
+                Recuerda que cuando borres 3 tareas perderás 1 vida
+              </Text>
+            )}
+            {info.isDone ? (
+              <Pressable
+                style={[styles.button, styles.buttonComplete]}
+                onPress={() => {
+                  taskServices.deleteTask(userInfo.id, info.id);
+                  setModalVisible(!modalVisible);
+                  //debo re renderizar acá
+                  DeviceEventEmitter.emit("event.testEvent");
+                }}
+              >
+                <Text style={styles.textStyle}>Terminar tarea!</Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                  taskServices.deleteTask(userInfo.id, info.id);
+                  setModalVisible(!modalVisible);
+                  //debo re renderizar acá
+                  DeviceEventEmitter.emit("event.testEvent");
+                }}
+              >
+                <Text style={styles.textStyle}>Borrar</Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </Modal>
@@ -148,6 +178,10 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: "#d35158",
+  },
+  buttonComplete: {
+    backgroundColor: "#0f9d58",
+    width: 120,
   },
   textStyle: {
     color: "white",
