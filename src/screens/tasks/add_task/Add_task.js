@@ -1,6 +1,8 @@
 import { AuthContext } from "../../../provider/AuthProvider";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useContext } from "react";
+import { DeviceEventEmitter } from "react-native";
+
+import React, { useState, useContext, useEffect } from "react";
 import useFetch from "../../../hooks/useFetch";
 import taskServices from "../../../services/taskServices";
 import {
@@ -20,19 +22,16 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { ceil } from "react-native-reanimated";
 
-const dataMock = {
-  isDone: false,
-  resetCounter: 5,
-  description: "vid puta",
-  name: "madrugar",
-  titulo: "Madrasdasugar",
-  difficulty: 1,
-};
-
 export default function Add_task(props) {
   const data = useContext(AuthContext);
 
+  useEffect(() => {
+    return () => {
+      DeviceEventEmitter.removeAllListeners("event.mapMarkerSelected");
+    };
+  }, []);
   const sendData = () => {
+    console.log(userInfo);
     taskServices.postTask(
       {
         isDone: userInfo.isDone,
@@ -49,8 +48,7 @@ export default function Add_task(props) {
     isDone: false,
     resetCounter: 1,
     description: "",
-    name: "nombre",
-    titulo: "",
+    name: "",
     difficulty: 1,
   });
 
@@ -90,6 +88,8 @@ export default function Add_task(props) {
                 onPress={() => {
                   //Send data to backend\
                   sendData();
+                  // force render
+                  DeviceEventEmitter.emit("event.testEvent");
                   props.navigation.navigate("Task");
                 }}
               >
@@ -138,22 +138,29 @@ export default function Add_task(props) {
             <View style={styles.formSubContainer}>
               <Text style={styles.bodyTextSection}>Dificultad</Text>
               <Picker
-                selectedValue={selectedLanguage}
+                selectedValue={userInfo.difficulty}
                 onValueChange={(itemValue, itemIndex) =>
-                  setSelectedLanguage(itemValue)
+                  handleChange("difficulty", itemValue)
                 }
                 style={styles.formInput}
               >
-                <Picker.Item label="Easy *" value="1" />
-                <Picker.Item label="Medium **" value="2" />
-                <Picker.Item label="Hard ***" value="3" />
+                <Picker.Item label="Easy *" value={1} />
+                <Picker.Item label="Medium **" value={2} />
+                <Picker.Item label="Hard ***" value={3} />
               </Picker>
               {/* <TextInput style={styles.formInput}></TextInput> */}
-              <Text style={styles.bodyTextSection}>Etiquetas</Text>
-              <TextInput style={styles.formInput}></TextInput>
-
               <Text style={styles.bodyTextSection}>Reset Counter</Text>
-              <TextInput style={styles.formInput}></TextInput>
+              <Picker
+                selectedValue={userInfo.resetCounter}
+                onValueChange={(itemValue, itemIndex) =>
+                  handleChange("resetCounter", itemValue)
+                }
+                style={styles.formInput}
+              >
+                <Picker.Item label="Diary" value={1} />
+                <Picker.Item label="Weekly" value={2} />
+                <Picker.Item label="Monthly" value={3} />
+              </Picker>
             </View>
           </View>
         </View>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 //import * as firebase from "firebase";
 import firebase from "firebase/app";
 import { NavigationContainer } from "@react-navigation/native";
@@ -6,7 +6,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthContext } from "../provider/AuthProvider";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
 // Main
 import Home from "../screens/tasks/Home";
 import Task from "../screens/tasks/Tasks";
@@ -23,6 +22,7 @@ import Bienvenida from "../screens/auth/Bienvenida";
 
 import Loading from "../screens/utils/Loading";
 import useFetch from "../hooks/useFetch";
+import taskServices from "../services/taskServices";
 // Better put your these secret keys in .env file
 const API = "https://habitapp-backend.herokuapp.com/users/";
 
@@ -43,7 +43,7 @@ const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const TaskStack = createStackNavigator();
 
-const TastNavigation = ({ tasks }) => {
+const TastNavigation = ({ tasks, fetchTasks }) => {
   return (
     <TaskStack.Navigator
       screenOptions={{
@@ -51,7 +51,7 @@ const TastNavigation = ({ tasks }) => {
       }}
     >
       <TaskStack.Screen name="Task">
-        {(props) => <Task tasks={tasks} {...props} />}
+        {(props) => <Task {...props} fetchTasks={fetchTasks} />}
       </TaskStack.Screen>
       <TaskStack.Screen name="Add_task" component={Add_task} />
       <TaskStack.Screen name="Edit_task" component={Edit_task} />
@@ -79,6 +79,15 @@ const Main = () => {
   const data = useContext(AuthContext);
   const [info, loading] = useFetch(API + data.id + "/tasks/", "", "GET");
   const [user, loading2] = useFetch(API + data.id, "", "GET");
+  const [taskList, setTaskList] = useState();
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+  const fetchTasks = async () => {
+    const taskData = await taskServices.getTasks(data.id);
+    setTaskList(taskData.data);
+  };
+
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -94,7 +103,9 @@ const Main = () => {
         }}
         name="Task"
       >
-        {!loading ? () => <TastNavigation tasks={info} /> : () => null}
+        {taskList
+          ? () => <TastNavigation tasks={taskList} fetchTasks={fetchTasks} />
+          : () => null}
       </Tab.Screen>
       <Tab.Screen
         options={{
@@ -109,7 +120,7 @@ const Main = () => {
           ? (props) => <SecondScreen user={user} {...props} />
           : () => null}
       </Tab.Screen>
-      {!loading && (
+      {taskList && (
         <Tab.Screen
           options={{
             tabBarLabel: "Statistics",
@@ -123,7 +134,7 @@ const Main = () => {
           }}
           name="Statistics"
         >
-          {(props) => <Statistics tasks={info} {...props} />}
+          {(props) => <Statistics tasks={taskList} {...props} />}
         </Tab.Screen>
       )}
       <Tab.Screen

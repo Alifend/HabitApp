@@ -7,10 +7,14 @@ class taskServices {
     return axios.post(API + uid + "/task", params);
   }
   editTask(params, uid, id) {
-    axios.put(API + "tasks/" + uid + "/task/" + id, params);
+    axios.put(API + uid + "/task/" + id, params);
   }
   deleteTask(uid, id) {
-    axios.delete(API + "tasks/" + uid + "/task/" + id);
+    axios.delete(API + uid + "/task/" + id);
+  }
+
+  getTasks(id) {
+    return axios.get(API + id + "/tasks");
   }
 }
 
